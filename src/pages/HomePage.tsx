@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import { Card, Button, Time, Footer, Divider, Typewriter } from 'animal-island-ui'
 import { useState } from 'react'
 
@@ -33,7 +32,6 @@ const features = [
 ]
 
 export default function HomePage() {
-  const navigate = useNavigate()
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
 
   return (
@@ -160,8 +158,10 @@ export default function HomePage() {
                   </p>
 
                   {/* Action Button */}
-                  <Button type="primary" onClick={() => navigate(feature.path)}>
-                    前往 {feature.title} →
+                  <Button type="primary">
+                    <a href={feature.path} style={{ color: 'inherit', textDecoration: 'none' }}>
+                      前往 {feature.title} →
+                    </a>
                   </Button>
                 </div>
               </Card>
