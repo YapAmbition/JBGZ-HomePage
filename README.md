@@ -32,21 +32,46 @@ npm run build
 
 ## 部署到云服务器
 
-### 1. 上传产物
-
-将 `dist/` 目录的全部内容上传到服务器，例如：
+### 1. 构建产物
 
 ```bash
-scp -r dist/* user@your-server:/var/www/jianbing-gouzi/
+npm run build
 ```
 
-或使用 rsync：
+产物输出到 `dist/` 目录。
+
+### 2. pm2 启动主页服务
+
+本项目是纯静态页面，pm2 内置了静态文件服务器，直接一条命令启动：
 
 ```bash
-rsync -avz dist/ user@your-server:/var/www/jianbing-gouzi/
+pm2 serve dist 3000 --spa --name "jianbing-gouzi"
 ```
 
-### 2. Nginx 配置
+- `dist` — 构建产物目录
+- `3000` — 服务端口（nginx `proxy_pass` 指向这个端口）
+- `--spa` — 自动回退到 `index.html`，React Router 正常工作
+- `--name` — pm2 进程名，方便管理
+
+更新部署只需重新构建后重启：
+
+```bash
+npm run build && pm2 restart jianbing-gouzi
+```
+
+常用 pm2 呡令：
+
+```bash
+pm2 list                # 查看所有进程
+pm2 logs jianbing-gouzi # 查看日志
+pm2 restart jianbing-gouzi  # 重启服务
+pm2 stop jianbing-gouzi     # 停止服务
+pm2 delete jianbing-gouzi   # 删除进程
+pm2 save                # 保存进程列表（开机自启用）
+pm2 startup             # 设置开机自启
+```
+
+### 3. Nginx 配置
 
 在你的 nginx 配置文件中添加以下内容（可放在 `/etc/nginx/conf.d/jianbing.conf` 或主配置文件中）：
 
@@ -55,32 +80,14 @@ server {
     listen 80;
     server_name your-domain.com;  # 替换为你的域名或 IP
 
-    root /var/www/jianbing-gouzi;  # 替换为实际的产物目录路径
-    index index.html;
+    # ========== 主页（pm2 静态服务） ==========
 
-    # ========== 主页（本项目的静态页面） ==========
-
-    # SPA 路由：匹配主页的静态资源后，其他路径回退到 index.html
     location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    # 静态资源缓存（JS/CSS 等带 hash 的文件）
-    location /assets/ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-
-    # 图片缓存
-    location /images/ {
-        expires 30d;
-        add_header Cache-Control "public";
-    }
-
-    # favicon 缓存
-    location = /vite.svg {
-        expires 30d;
-        add_header Cache-Control "public";
+        proxy_pass http://127.0.0.1:3000;  # pm2 serve 的端口
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     # ========== 独立服务（反向代理） ==========
@@ -114,10 +121,10 @@ server {
 
     # ========== 错误页面 ==========
 
-    # 50x 错误页面（静态 HTML，不依赖 React 应用）
+    # 50x 错误页面
     error_page 500 502 503 504 /50x.html;
     location = /50x.html {
-        root /var/www/jianbing-gouzi;
+        root /path/to/your/project/dist;  # 替换为项目 dist 目录的绝对路径
         internal;
     }
 }
@@ -134,14 +141,15 @@ location /chat-room {
 }
 ```
 
-### 3. 关键配置说明
+### 4. 关键配置说明
 
-- **`location /` 的 `try_files`**：nginx 先匹配静态文件（主页资源），找不到则回退到 `index.html`，由 React Router 处理 404。注意 `/chat-room`、`/md-view`、`/march-7th` 这三个 location 写在前面，nginx 会优先匹配它们并走 `proxy_pass`，不会落到 `try_files` 里。
-- **`/assets/` 缓存**：Vite 构建的 JS/CSS 文件名自带 hash，可以安全地设置长期缓存（1 年），更新部署时文件名变化，缓存自动失效。
-- **`proxy_pass` 的 location 优先级**：nginx 的 location 匹配规则是精确匹配优先。`/chat-room` 等路径会被对应 location 捕获并转发到各自后端，不会落到 `location /` 的 `try_files`。
-- **`error_page`**：服务器出现 500/502/503/504 时，展示动森风格的 50x.html 错误页。
+- **`pm2 serve --spa`**：pm2 内置的静态服务器，`--spa` 模式会自动将所有未匹配路径回退到 `index.html`，React Router 正常处理 404 等路由。
+- **`location /`**：所有路径由 nginx 代理到 pm2 服务。`/chat-room` 等精确匹配的 location 会优先被捕获，不会落到 `location /`。
+- **`proxy_pass` 的 location 优先级**：nginx 精确匹配优先。`/chat-room` 等路径会被对应 location 捕获并转发到各自后端。
+- **`50x.html`**：由于 50x 错误时 pm2 服务本身可能不可用，这个静态页面需要 nginx 直接读取磁盘文件，所以 `root` 要指向项目 `dist` 目录的绝对路径。
+- **端口规划建议**：主页用 3000，三个服务各自用不同端口，nginx 按路径转发。
 
-### 4. 检查与生效
+### 5. 检查与生效
 
 ```bash
 # 检查配置语法
@@ -151,7 +159,7 @@ nginx -t
 nginx -s reload
 ```
 
-### 5. HTTPS（推荐）
+### 6. HTTPS（推荐）
 
 如果需要 HTTPS，可以用 certbot 自动配置：
 
