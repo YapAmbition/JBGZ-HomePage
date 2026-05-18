@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小岛遇到了麻烦 🏝️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Nunito, 'Noto Sans SC', sans-serif;
+      background: #f8f8f0;
+      color: #725d42;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      letter-spacing: 0.01em;
+    }
+    .container {
+      text-align: center;
+      max-width: 480px;
+    }
+    .error-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      animation: wiggle 2s ease-in-out infinite;
+    }
+    .error-code {
+      font-size: 48px;
+      font-weight: 900;
+      color: #19c8b9;
+      margin: 16px 0;
+    }
+    .title-card {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #f7f3dd, #ede4d0);
+      color: #794f27;
+      font-size: 24px;
+      font-weight: 700;
+      border-radius: 40px 35px 45px 38px;
+      margin-bottom: 24px;
+    }
+    .divider-wave {
+      width: 100%;
+      height: 12px;
+      background: repeating-linear-gradient(
+        90deg,
+        #ffcc00 0px,
+        #ffcc00 4px,
+        transparent 4px,
+        transparent 8px
+      );
+      border-radius: 6px;
+      margin: 16px 0;
+    }
+    .message {
+      font-size: 16px;
+      margin: 16px 0;
+      line-height: 1.6;
+    }
+    .message-small {
+      font-size: 14px;
+      color: #9f927d;
+      margin: 8px 0;
+    }
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+    .btn-primary {
+      background: #19c8b9;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 5px 0 0 #11a89b;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-primary:active { transform: translateY(4px); box-shadow: 0 1px 0 0 #11a89b; }
+    .btn-default {
+      background: #f7f3dd;
+      color: #794f27;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      border: 2px solid #bdaea0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-default:hover { background: #ede4d0; }
+    .footer-tree {
+      width: 100%;
+      height: 60px;
+      margin-top: 48px;
+      background: #ede4d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: #794f27;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-3deg); }
+      75% { transform: rotate(3deg); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .float { animation: float 3s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="error-icon float">🔧</div>
+    <div class="title-card">小岛遇到了麻烦</div>
+    <div class="error-code">500</div>
+    <div class="divider-wave"></div>
+    <p class="message">
+      煎饼狗子的小岛服务器好像出了点问题...<br>
+      三月七正在努力修复中！💪
+    </p>
+    <p class="message-small">
+      别担心，这只是临时的小故障，小岛很快就会恢复正常的~
+    </p>
+    <div class="buttons">
+      <a href="/" class="btn-primary">回到小岛 🏝️</a>
+      <button onclick="location.reload()" class="btn-default">刷新试试 ↻</button>
+    </div>
+  </div>
+  <div class="footer-tree">
+    <p class="footer-text">🏝️ 煎饼狗子的小岛 · 服务器正在休假中</p>
+  </div>
+</body>
+</html>

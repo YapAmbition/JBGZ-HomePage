@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* === Animal Crossing Theme === */
+
+    /* Core palette */
+    --background: 60 17% 96.5%;       /* #f8f8f0 warm parchment */
+    --foreground: 30 27% 35%;          /* #725d42 warm brown body */
+    --parchment: 60 17% 96.5%;         /* #f8f8f0 */
+
+    /* Browns */
+    --brown-warm: 30 55% 30%;          /* #794f27 header brown */
+    --brown-body: 30 27% 35%;          /* #725d42 body brown */
+    --brown-light: 25 30% 65%;         /* lighter brown for shadows */
+
+    /* Mint teal */
+    --mint: 174 75% 43%;               /* #19c8b9 primary accent */
+    --mint-light: 174 60% 70%;         /* lighter mint */
+    --mint-dark: 174 50% 30%;          /* darker mint for shadows */
+
+    /* Sunny yellow */
+    --sunny: 48 100% 50%;              /* #ffcc00 */
+    --sunny-light: 48 100% 65%;        /* lighter yellow */
+
+    /* Nook colors */
+    --nook-cream: 40 30% 92%;          /* cream card bg */
+    --nook-shell: 30 15% 88%;          /* shell pink bg */
+
+    /* Standard shadcn tokens mapped to theme */
+    --card: 40 30% 92%;
+    --card-foreground: 30 55% 30%;
+    --popover: 60 17% 96.5%;
+    --popover-foreground: 30 55% 30%;
+    --primary: 174 75% 43%;
+    --primary-foreground: 60 17% 98%;
+    --secondary: 30 15% 88%;
+    --secondary-foreground: 30 55% 30%;
+    --muted: 40 15% 90%;
+    --muted-foreground: 30 27% 45%;
+    --accent: 48 100% 50%;
+    --accent-foreground: 30 55% 30%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 60 17% 98%;
+    --border: 30 20% 80%;
+    --input: 30 20% 80%;
+    --ring: 48 100% 50%;
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(180deg, hsl(174 75% 43% / 0.08), hsl(60 17% 96.5%));
+    --gradient-card: linear-gradient(135deg, hsl(40 30% 92%), hsl(30 15% 88%));
+    --gradient-sunny: linear-gradient(135deg, hsl(48 100% 50%), hsl(48 100% 65%));
+
+    /* Shadows */
+    --shadow-3d: 0 5px 0 0 hsl(25 30% 65%);
+    --shadow-3d-pressed: 0 1px 0 0 hsl(25 30% 65%);
+    --shadow-float: 0 8px 24px -8px hsl(174 75% 43% / 0.2);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-nook;
+    letter-spacing: 0.01em;
+  }
+
+  /* Animal Crossing cursor */
+  .animal-cursor,
+  .animal-cursor * {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="%23794f27" stroke="%23ffcc00" stroke-width="2"/><circle cx="10" cy="10" r="2" fill="%23ffcc00"/></svg>') 12 12, pointer !important;
+  }
+}
+
+@layer components {
+  /* 3D button effect */
+  .btn-3d {
+    box-shadow: 0 5px 0 0 hsl(var(--brown-light));
+    transition: all 0.15s ease;
+  }
+  .btn-3d:active {
+    box-shadow: 0 1px 0 0 hsl(var(--brown-light));
+    transform: translateY(4px);
+  }
+
+  .btn-3d-teal {
+    box-shadow: 0 5px 0 0 hsl(var(--mint-dark));
+    transition: all 0.15s ease;
+  }
+  .btn-3d-teal:active {
+    box-shadow: 0 1px 0 0 hsl(var(--mint-dark));
+    transform: translateY(4px);
+  }
+
+  .btn-3d-sunny {
+    box-shadow: 0 5px 0 0 hsl(var(--sunny) / 0.6);
+    transition: all 0.15s ease;
+  }
+  .btn-3d-sunny:active {
+    box-shadow: 0 1px 0 0 hsl(var(--sunny) / 0.6);
+    transform: translateY(4px);
+  }
+
+  /* Card hover lift */
+  .card-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px -8px hsl(var(--mint) / 0.3);
+  }
+
+  /* Organic border radius for title cards */
+  .radius-organic {
+    border-radius: 40px 35px 45px 38px;
+  }
+
+  /* Decorative leaf decoration */
+  .leaf-decoration::before {
+    content: '🍃';
+    position: absolute;
+    top: -8px;
+    right: 16px;
+    animation: leaf-sway 4s ease-in-out infinite;
+  }
+}
