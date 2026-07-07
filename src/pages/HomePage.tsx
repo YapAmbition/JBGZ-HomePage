@@ -23,11 +23,11 @@ const features = [
   {
     path: '/march-7th',
     title: '三月七',
-    subtitle: '你的专属 AI 助手',
+    subtitle: '心细如斯明察秋毫小三月',
     emoji: '🌈',
     image: '/images/march-7th-icon.png',
     cardColor: 'warm-peach-pink' as const,
-    description: '元气满满的粉色少女助手，随时帮你解决问题',
+    description: '元气满满的粉色少女助手,就是小三月啦!',
   },
 ]
 
